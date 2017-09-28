@@ -11,6 +11,9 @@ import android.content.Intent;
 public class AlarmReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-        context.sendBroadcast(new Intent("alarm"));
+        String id = intent.getStringExtra("name");
+        Intent intent2 = new Intent("alarm");
+        intent2.putExtra("name", id);
+        context.sendBroadcast(intent2);
     }
 }

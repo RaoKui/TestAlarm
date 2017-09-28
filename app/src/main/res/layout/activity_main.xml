@@ -20,11 +20,23 @@
         android:layout_marginTop="5dp"
         android:hint="分钟" />
 
+    <EditText
+        android:id="@+id/et_id"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:hint="闹钟id" />
+
     <Button
         android:id="@+id/btn_set"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:text="设置" />
+
+    <Button
+        android:id="@+id/btn_cancel"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="取消" />
 
     <TextView
         android:id="@+id/tv_text"

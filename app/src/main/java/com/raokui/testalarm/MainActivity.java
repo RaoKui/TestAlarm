@@ -1,6 +1,7 @@
 package com.raokui.testalarm;
 
 import android.app.AlarmManager;
+import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -31,6 +32,8 @@ public class MainActivity extends AppCompatActivity {
 
     private EditText et_id;
 
+    private String msg;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,10 +56,26 @@ public class MainActivity extends AppCompatActivity {
                 setAlarm();
             }
         });
+
+        findViewById(R.id.btn_cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                cancelAlarm();
+            }
+        });
+    }
+
+    private void cancelAlarm() {
+        Intent intent = new Intent(this, AlarmReceiver.class);
+        PendingIntent pi = PendingIntent.getBroadcast(this, Integer.parseInt(et_id.getText().toString()), intent, PendingIntent
+                .FLAG_CANCEL_CURRENT);
+        AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        am.cancel(pi);
+        msg += "取消了id为：" + et_id.getText().toString() + "的闹钟 ---------\n";
+        tv_text.setText(msg);
     }
 
     private void setAlarm() {
-
 
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Calendar instance = Calendar.getInstance();
@@ -68,6 +87,14 @@ public class MainActivity extends AppCompatActivity {
         PendingIntent pending_intent = PendingIntent.getBroadcast(this, Integer.parseInt(et_id.getText().toString()), alarm_intent, 0);
         // 四个参数：1、类型  2、开始时间 3、重复时间
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, instance.getTimeInMillis(), INTERVAL, pending_intent);
+        msg += "设置了id为：" + et_id.getText().toString() + "的闹钟 ---------\n";
+        tv_text.setText(msg);
+
+    }
+
+    private void getAlarm() {
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+
     }
 
     @Override
@@ -81,7 +108,8 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             String id = intent.getStringExtra("name");
-            tv_text.setText("闹钟" + id + "响了");
+            msg += "闹钟" + id + "响了---------\n";
+            tv_text.setText(msg);
         }
     };
 }
