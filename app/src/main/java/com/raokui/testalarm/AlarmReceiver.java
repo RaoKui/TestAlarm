@@ -15,5 +15,6 @@ public class AlarmReceiver extends BroadcastReceiver {
         Intent intent2 = new Intent("alarm");
         intent2.putExtra("name", id);
         context.sendBroadcast(intent2);
+        context.startActivity(new Intent(context, MainActivity.class));
     }
 }
