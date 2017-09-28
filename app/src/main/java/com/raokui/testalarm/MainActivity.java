@@ -29,6 +29,8 @@ public class MainActivity extends AppCompatActivity {
 
     private Button btn_set;
 
+    private EditText et_id;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         filter.addAction("alarm");
         registerReceiver(mReceiver, filter);
 
-
+        et_id = (EditText) findViewById(R.id.et_id);
         et_hour = (EditText) findViewById(R.id.et_hour);
         et_minute = (EditText) findViewById(R.id.et_minute);
         tv_text = (TextView) findViewById(R.id.tv_text);
@@ -54,12 +56,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setAlarm() {
+
+
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Calendar instance = Calendar.getInstance();
         instance.set(Calendar.HOUR_OF_DAY, Integer.parseInt(et_hour.getText().toString()));
         instance.set(Calendar.MINUTE, Integer.parseInt(et_minute.getText().toString()));
         Intent alarm_intent = new Intent(this, AlarmReceiver.class);
-        PendingIntent pending_intent = PendingIntent.getBroadcast(this, 0, alarm_intent, 0);
+        alarm_intent.putExtra("name", et_id.getText().toString());
+
+        PendingIntent pending_intent = PendingIntent.getBroadcast(this, Integer.parseInt(et_id.getText().toString()), alarm_intent, 0);
+        // 四个参数：1、类型  2、开始时间 3、重复时间
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, instance.getTimeInMillis(), INTERVAL, pending_intent);
     }
 
@@ -73,7 +80,8 @@ public class MainActivity extends AppCompatActivity {
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            tv_text.setText("闹钟响了");
+            String id = intent.getStringExtra("name");
+            tv_text.setText("闹钟" + id + "响了");
         }
     };
 }
